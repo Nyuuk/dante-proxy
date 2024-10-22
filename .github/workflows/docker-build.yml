@@ -20,6 +20,7 @@ jobs:
           API_URL: https://wa-api.nyuuk.my.id/api/send-message
           API_SECRET: ${{ secrets.API_SECRET }}
           API_KEY: HELLOWORLD
+          NUMBER_NOTIFICATION = 6285156803524
         run: |
           BRANCH=$(git rev-parse --abbrev-ref HEAD)
           LAST_COMMIT=$(git log -1 --pretty=format:"%s")
@@ -31,8 +32,8 @@ jobs:
           curl -X POST $API_URL \
             -H "x-api-secret: $API_SECRET" \
             -H "x-api-key: $API_KEY" \
-            -F "text=Branch(Version): $BRANCH\nLast Message: $LAST_COMMIT\nAuthor: $AUTHOR\nCommit: $COMMIT_HASH\nJob URL: $JOB_URL" \
-            -F "number=6285156803524"
+            -F "text=\"Branch(Version): $BRANCH\nLast Message: $LAST_COMMIT\nAuthor: $AUTHOR\nCommit: $COMMIT_HASH\nJob URL: $JOB_URL\"" \
+            -F "number=$NUMBER_NOTIFICATION"
 
       # Login ke DockerHub
       - name: Log in to DockerHub
