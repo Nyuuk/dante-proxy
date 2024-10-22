@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dante-proxy
+  namespace: default
+  labels:
+    app: dante-proxy
+spec:
+  # replicas: 4
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: dante-proxy
+  template:
+    metadata:
+      labels:
+        app: dante-proxy
+    spec:
+      containers:
+        - name: dante-proxy
+          image: dnanfab/dante-proxy:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 1080
+          resources:
+            limits:
+              cpu: 150m
+              memory: 260Mi
+            requests:
+              cpu: 100m
+              memory: 250Mi
