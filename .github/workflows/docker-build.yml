@@ -1,0 +1,54 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main  # Jalankan setiap ada push ke branch `main`
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Kirim Notifikasi via API
+      - name: Send Notification
+        env:
+          API_URL: https://wa-api.nyuuk.my.id/api/send-message
+          API_SECRET: ${{ secrets.API_SECRET }}
+          API_KEY: HELLOWORLD
+        run: |
+          BRANCH=$(git rev-parse --abbrev-ref HEAD)
+          LAST_COMMIT=$(git log -1 --pretty=format:"%s")
+          AUTHOR=$(git log -1 --pretty=format:"%ae")
+          COMMIT_HASH=$(git log -1 --pretty=format:"%H")
+          JOB_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          # Payload API
+          PAYLOAD="text=Branch(Version): $BRANCH%0ALast Message: $LAST_COMMIT%0AAuthor: $AUTHOR%0ACommit: $COMMIT_HASH%0AJob URL: $JOB_URL%0A -- 🤝 $JOB_URL&number=6285156803524"
+
+          # Panggil API menggunakan curl
+          curl -X POST $API_URL \
+            -H "Authorization: Bearer $API_SECRET" \
+            -H "x-api-key: $API_KEY" \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            --data "$PAYLOAD"
+
+      # Checkout repository
+      - name: Check out the repository
+        uses: actions/checkout@v3
+
+      # Login ke DockerHub
+      - name: Log in to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # Build Docker image
+      - name: Build the Docker image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/socks5-proxy:latest .
+
+      # Push Docker image ke DockerHub
+      - name: Push the Docker image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/socks5-proxy:latest
+
