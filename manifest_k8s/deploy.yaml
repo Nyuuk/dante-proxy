@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: dante-proxy
-          image: dnanfab/dante-proxy:latest
+          image: dnanfab/dante-proxy:11
           imagePullPolicy: Always
           ports:
             - containerPort: 1080
