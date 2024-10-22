@@ -20,7 +20,7 @@ jobs:
           API_URL: https://wa-api.nyuuk.my.id/api/send-message
           API_SECRET: ${{ secrets.API_SECRET }}
           API_KEY: HELLOWORLD
-          NUMBER_NOTIFICATION = 6285156803524
+          NUMBER_NOTIFICATION: 6285156803524
         run: |
           BRANCH=$(git rev-parse --abbrev-ref HEAD)
           LAST_COMMIT=$(git log -1 --pretty=format:"%s")
