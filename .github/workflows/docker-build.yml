@@ -28,11 +28,14 @@ jobs:
           COMMIT_HASH=$(git log -1 --pretty=format:"%H")
           JOB_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
+          # Membangun payload menggunakan printf
+          TEXT=$(printf "Branch(Version): %s\nLast Message: %s\nAuthor: %s\nCommit: %s\nJob URL: %s" "$BRANCH" "$LAST_COMMIT" "$AUTHOR" "$COMMIT_HASH" "$JOB_URL")
+
           # Panggil API menggunakan curl dengan multipart/form-data
           curl -X POST $API_URL \
             -H "x-api-secret: $API_SECRET" \
             -H "x-api-key: $API_KEY" \
-            -F "text=\"Branch(Version): $BRANCH\nLast Message: $LAST_COMMIT\nAuthor: $AUTHOR\nCommit: $COMMIT_HASH\nJob URL: $JOB_URL\"" \
+            -F "text=$TEXT" \
             -F "number=$NUMBER_NOTIFICATION"
 
       # Login ke DockerHub
