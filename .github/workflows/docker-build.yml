@@ -32,7 +32,7 @@ jobs:
 
           # Panggil API menggunakan curl
           curl -X POST $API_URL \
-            -H "Authorization: Bearer $API_SECRET" \
+            -H "x-api-secret: $API_SECRET" \
             -H "x-api-key: $API_KEY" \
             -H "Content-Type: application/x-www-form-urlencoded" \
             --data "$PAYLOAD"
